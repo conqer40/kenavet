@@ -9,10 +9,10 @@
 
 ## 🌟 روابط التحميل المباشرة والمعاينة (Direct Downloads & Links)
 
-* 🌐 **العرض التقديمي التفاعلي (GitHub Pages):** [عرض البرزنتيشن أونلاين](https://conqer40.github.io/kenavet-crm/)
-* 📱 **تحميل تطبيق الأندرويد الميداني:** [تحميل KENAVET.apk](https://github.com/conqer40/kenavet-crm/raw/main/docs/KENAVET.apk)
-* 📄 **تحميل العرض التقديمي PDF (16:9):** [تحميل KENAVET_FieldForce_Presentation.pdf](https://github.com/conqer40/kenavet-crm/raw/main/docs/KENAVET_FieldForce_Presentation.pdf)
-* 📝 **دليل التشغيل والاستخدام الشامل (Word):** [تحميل FieldForce_Pro_Comprehensive_User_Guide.docx](https://github.com/conqer40/kenavet-crm/raw/main/docs/FieldForce_Pro_Comprehensive_User_Guide.docx)
+* 🌐 **العرض التقديمي وبوابة النظام أونلاين:** [https://www.elhawyai.com/kenavet/](https://www.elhawyai.com/kenavet/)
+* 📱 **تحميل تطبيق الأندرويد الميداني:** [تحميل KENAVET.apk](https://github.com/conqer40/kenavet/raw/main/docs/KENAVET.apk)
+* 📄 **تحميل العرض التقديمي PDF (16:9):** [تحميل KENAVET_FieldForce_Presentation.pdf](https://github.com/conqer40/kenavet/raw/main/docs/KENAVET_FieldForce_Presentation.pdf)
+* 📝 **دليل التشغيل والاستخدام الشامل (Word):** [تحميل FieldForce_Pro_Comprehensive_User_Guide.docx](https://github.com/conqer40/kenavet/raw/main/docs/FieldForce_Pro_Comprehensive_User_Guide.docx)
 
 ---
 
