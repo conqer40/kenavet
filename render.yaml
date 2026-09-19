@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: kenavet-fieldforce-crm
+    env: node
+    plan: free
+    region: frankfurt # Closest to Egypt / Middle East
+    buildCommand: npm install && npm run build
+    startCommand: npm run db:migrate && npm run db:seed && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ALLOW_LOCAL_DB
+        value: "true"
+      - key: PORT
+        value: 3000

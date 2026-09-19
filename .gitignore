@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.env*
+!.env.example
+.data/
+coverage/
+test-results/
+playwright-report/
+android/
+*.tsbuildinfo
+temp_docx_build/
+*.tgz
+test_screenshot*.png
+*.log

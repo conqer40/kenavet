@@ -1,0 +1,11 @@
+import {NextRequest} from 'next/server';
+import ExcelJS from 'exceljs';
+import {actor,failure} from '@/lib/http';
+import {requirePermission,AppError} from '@/lib/auth';
+import {scoped} from '@/lib/db';
+import {isModule} from '@/lib/service';
+export async function GET(req:NextRequest){try{const a=await actor(req);requirePermission(a,'reports.export');const q=req.nextUrl.searchParams,m=q.get('module')||'visits';if(!isModule(m)&&m!=='customers')throw new AppError('invalid_module');const rows=await scoped(a,async db=>{const values:unknown[]=[];const where:string[]=[];for(const [key,column] of [['from','date >='],['to','date <='],['status','status ='],['area','area_id ='],['representative','representative_id ='],['customer','customer_id =']] as const){const value=q.get(key);if(value&&m!=='customers'){values.push(value);where.push(`r.${column} $${values.length}`);}}return (await db.query(`SELECT r.* FROM ${m} r ${where.length?'WHERE '+where.join(' AND '):''} ORDER BY ${m==='customers'?'name':'date DESC'} LIMIT 10000`,values)).rows;});
+ const columns=rows.length?Object.keys(rows[0]).filter(k=>!['company_id','details'].includes(k)):['id'];const safe=(v:unknown)=>{const s=v instanceof Date?v.toISOString():String(v??'');return /^[=+@\-\t\r]/.test(s)?"'"+s:s;};
+ if(q.get('format')==='xlsx'){const workbook=new ExcelJS.Workbook(),sheet=workbook.addWorksheet(m,{views:[{rightToLeft:true}]});sheet.columns=columns.map(key=>({header:key,key,width:24}));rows.forEach(row=>sheet.addRow(Object.fromEntries(columns.map(k=>[k,safe(row[k])]))));sheet.getRow(1).font={bold:true,color:{argb:'FFFFFFFF'}};sheet.getRow(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF176B55'}};const data=await workbook.xlsx.writeBuffer();return new Response(new Uint8Array(data),{headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','Content-Disposition':`attachment; filename="${m}.xlsx"`,'Cache-Control':'no-store'}});}
+ const csv='\uFEFF'+[columns,...rows.map(r=>columns.map(k=>safe(r[k])))].map(row=>row.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\r\n');return new Response(csv,{headers:{'Content-Type':'text/csv; charset=utf-8','Content-Disposition':`attachment; filename="${m}.csv"`,'Cache-Control':'no-store'}});
+}catch(e){return failure(e);}}
