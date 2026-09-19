@@ -1,4 +1,15 @@
-<!DOCTYPE html>
+import * as fs from 'fs';
+import * as path from 'path';
+
+// Read existing presentation deck to allow viewing inside presentation tab
+const presPath = path.join('D:', 'CRM', 'docs', 'FieldForce_Pro_Interactive_Presentation.html');
+let presHtml = '';
+if (fs.existsSync(presPath)) {
+  presHtml = fs.readFileSync(presPath, 'utf8');
+}
+
+// Generate the complete self-contained KENAVET CRM web application
+const appHtml = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -847,14 +858,14 @@
     const cols = getStore('kenavet_collections');
     const totalCollected = cols.reduce((sum, c) => sum + Number(c.amount || 0), 0);
 
-    let html = `
+    let html = \`
       <div class="hero-banner">
         <div class="hero-content">
           <h2>مرحباً بك في منصة KENAVET 🌿</h2>
-          <p>أهلاً بك يا <strong>${currentUser.name}</strong>. النظام مفعل بالكامل ويعمل أونلاين لمتابعة العمليات البيطرية وسير المناديب عبر 27 محافظة مصرية.</p>
+          <p>أهلاً بك يا <strong>\${currentUser.name}</strong>. النظام مفعل بالكامل ويعمل أونلاين لمتابعة العمليات البيطرية وسير المناديب عبر 27 محافظة مصرية.</p>
           <div class="hero-pills">
-            <span class="hero-pill">📍 نطاق صلاحيتك: ${currentUser.governorate}</span>
-            <span class="hero-pill">🛡️ رتبة الحساب: ${currentUser.roleAr}</span>
+            <span class="hero-pill">📍 نطاق صلاحيتك: \${currentUser.governorate}</span>
+            <span class="hero-pill">🛡️ رتبة الحساب: \${currentUser.roleAr}</span>
             <span class="hero-pill">📱 تطبيق الأندرويد: متاح للتحميل</span>
           </div>
         </div>
@@ -868,17 +879,17 @@
       <div class="stats-grid">
         <div class="stat-card">
           <span>إجمالي العملاء والمزارع</span>
-          <strong>${custs.length}</strong>
+          <strong>\${custs.length}</strong>
           <small>موزعين عبر المحافظات</small>
         </div>
         <div class="stat-card">
           <span>التقارير والزيارات الميدانية</span>
-          <strong>${visits.length}</strong>
+          <strong>\${visits.length}</strong>
           <small>موثقة بإحداثيات الـ GPS</small>
         </div>
         <div class="stat-card">
           <span>إجمالي التحصيلات المعتمدة</span>
-          <strong style="color:var(--brand);">${totalCollected.toLocaleString()} ج.م</strong>
+          <strong style="color:var(--brand);">\${totalCollected.toLocaleString()} ج.م</strong>
           <small>شيكات ونقد وإنستاباي</small>
         </div>
         <div class="stat-card">
@@ -904,14 +915,14 @@
               </tr>
             </thead>
             <tbody>
-              ${visits.slice(0, 4).map(v => `
+              \${visits.slice(0, 4).map(v => \`
                 <tr>
-                  <td><strong>${v.customer}</strong></td>
-                  <td>${v.rep}</td>
-                  <td><span class="badge-type">${v.gov}</span></td>
-                  <td><small style="color:var(--muted)">${v.outcome.slice(0, 45)}...</small></td>
+                  <td><strong>\${v.customer}</strong></td>
+                  <td>\${v.rep}</td>
+                  <td><span class="badge-type">\${v.gov}</span></td>
+                  <td><small style="color:var(--muted)">\${v.outcome.slice(0, 45)}...</small></td>
                 </tr>
-              `).join('')}
+              \`).join('')}
             </tbody>
           </table>
         </div>
@@ -937,7 +948,7 @@
           </div>
         </div>
       </div>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
@@ -947,42 +958,42 @@
       custs = custs.filter(c => c.gov === currentUser.governorate || currentUser.governorate.includes(c.gov));
     }
 
-    let html = `
+    let html = \`
       <div class="section-header">
         <div>
-          <h3>قائمة العملاء والمزارع (${custs.length} عميل)</h3>
+          <h3>قائمة العملاء والمزارع (\${custs.length} عميل)</h3>
           <p style="font-size:12px;color:var(--muted);">يظهر للمندوب فقط عملاء نطاقه الجغرافي المسند إليه</p>
         </div>
         <button class="btn-primary" onclick="openAddCustomerModal()">+ تكويد عميل جديد</button>
       </div>
 
       <div class="card-grid">
-        ${custs.map(c => `
+        \${custs.map(c => \`
           <div class="client-card">
             <div class="client-card-top">
               <div>
-                <h4>${c.name}</h4>
-                <p>👤 المسؤول: ${c.contact} | 📞 ${c.phone}</p>
+                <h4>\${c.name}</h4>
+                <p>👤 المسؤول: \${c.contact} | 📞 \${c.phone}</p>
               </div>
-              <span class="badge-type">${c.type}</span>
+              <span class="badge-type">\${c.type}</span>
             </div>
             <div class="client-meta">
-              <span>📍 ${c.gov} - ${c.city}</span>
-              <span>👨‍⚕️ المندوب: ${c.rep}</span>
-              <span style="color:#d97706;font-weight:700;">★ تصنيف ${c.class}</span>
+              <span>📍 \${c.gov} - \${c.city}</span>
+              <span>👨‍⚕️ المندوب: \${c.rep}</span>
+              <span style="color:#d97706;font-weight:700;">★ تصنيف \${c.class}</span>
             </div>
             <div class="client-actions">
-              <a href="https://maps.google.com/?q=${c.gps}" target="_blank" class="btn-sm primary">
+              <a href="https://maps.google.com/?q=\${c.gps}" target="_blank" class="btn-sm primary">
                 🗺️ موقع المزرعة (Google Maps)
               </a>
-              <button class="btn-sm" onclick="openAddVisitForCustomer('${c.name}', '${c.gov}')">
+              <button class="btn-sm" onclick="openAddVisitForCustomer('\${c.name}', '\${c.gov}')">
                 ⚡ تقرير زيارة
               </button>
             </div>
           </div>
-        `).join('')}
+        \`).join('')}
       </div>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
@@ -992,7 +1003,7 @@
       visits = visits.filter(v => v.gov === currentUser.governorate);
     }
 
-    let html = `
+    let html = \`
       <div class="section-header">
         <div>
           <h3>التقارير والزيارات اليومية الموثقة بالـ GPS</h3>
@@ -1017,30 +1028,30 @@
             </tr>
           </thead>
           <tbody>
-            ${visits.map(v => `
+            \${visits.map(v => \`
               <tr>
-                <td><strong>${v.id}</strong></td>
-                <td><strong>${v.customer}</strong></td>
-                <td>${v.date}</td>
-                <td>${v.rep}</td>
-                <td><span class="badge-type">${v.gov}</span></td>
-                <td>${v.type}</td>
-                <td><small style="color:var(--brand);font-weight:700;">📍 ${v.gps}</small></td>
-                <td>${v.outcome}</td>
-                <td><span class="status-pill status-confirmed">${v.status}</span></td>
+                <td><strong>\${v.id}</strong></td>
+                <td><strong>\${v.customer}</strong></td>
+                <td>\${v.date}</td>
+                <td>\${v.rep}</td>
+                <td><span class="badge-type">\${v.gov}</span></td>
+                <td>\${v.type}</td>
+                <td><small style="color:var(--brand);font-weight:700;">📍 \${v.gps}</small></td>
+                <td>\${v.outcome}</td>
+                <td><span class="status-pill status-confirmed">\${v.status}</span></td>
               </tr>
-            `).join('')}
+            \`).join('')}
           </tbody>
         </table>
       </div>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
   function renderCollections() {
     let cols = getStore('kenavet_collections');
 
-    let html = `
+    let html = \`
       <div class="section-header">
         <div>
           <h3>سندات التحصيل المالي والشيكات البنكية</h3>
@@ -1065,29 +1076,29 @@
             </tr>
           </thead>
           <tbody>
-            ${cols.map(c => `
+            \${cols.map(c => \`
               <tr>
-                <td><strong>${c.id}</strong></td>
-                <td><strong>${c.customer}</strong></td>
-                <td style="color:var(--brand);font-weight:800;">${Number(c.amount).toLocaleString()} ج.م</td>
-                <td><span class="badge-type">${c.method}</span></td>
-                <td><code>${c.ref}</code></td>
-                <td>${c.bank}</td>
-                <td>${c.date}</td>
-                <td>${c.rep}</td>
-                <td><span class="status-pill ${c.status.includes('مؤكد')?'status-confirmed':'status-pending'}">${c.status}</span></td>
+                <td><strong>\${c.id}</strong></td>
+                <td><strong>\${c.customer}</strong></td>
+                <td style="color:var(--brand);font-weight:800;">\${Number(c.amount).toLocaleString()} ج.م</td>
+                <td><span class="badge-type">\${c.method}</span></td>
+                <td><code>\${c.ref}</code></td>
+                <td>\${c.bank}</td>
+                <td>\${c.date}</td>
+                <td>\${c.rep}</td>
+                <td><span class="status-pill \${c.status.includes('مؤكد')?'status-confirmed':'status-pending'}">\${c.status}</span></td>
               </tr>
-            `).join('')}
+            \`).join('')}
           </tbody>
         </table>
       </div>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
   function renderInvoices() {
     if (!currentUser.canViewInvoices) {
-      document.getElementById('mainContent').innerHTML = `
+      document.getElementById('mainContent').innerHTML = \`
         <div style="background:#fff8e6;border:1px solid #f2dd9b;padding:30px;border-radius:16px;text-align:center;">
           <h3 style="color:#b45309;margin-bottom:10px;">🔒 صلاحية الدخول محجوبة (Gated Access)</h3>
           <p style="color:#78350f;max-width:600px;margin:0 auto 16px;">
@@ -1095,11 +1106,11 @@
           </p>
           <small style="color:var(--muted)">يمكنك التبديل إلى حساب "المدير العام" أو "المحاسب المالي" من القائمة العلوية للاطلاع على الفواتير.</small>
         </div>
-      `;
+      \`;
       return;
     }
 
-    let html = `
+    let html = \`
       <div class="section-header">
         <div>
           <h3>فواتير المبيعات والأرصدة المدينة للعملاء</h3>
@@ -1151,14 +1162,14 @@
           </tbody>
         </table>
       </div>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
   function renderLeaves() {
     const leaves = getStore('kenavet_leaves');
 
-    let html = `
+    let html = \`
       <div class="section-header">
         <div>
           <h3>منظومة إدارة الإجازات والاعتمادات</h3>
@@ -1198,35 +1209,35 @@
               <th>المدة</th>
               <th>السبب</th>
               <th>الحالة</th>
-              ${currentUser.canApprove ? '<th>الإجراء الإداري</th>' : ''}
+              \${currentUser.canApprove ? '<th>الإجراء الإداري</th>' : ''}
             </tr>
           </thead>
           <tbody>
-            ${leaves.map(l => `
+            \${leaves.map(l => \`
               <tr>
-                <td><strong>${l.id}</strong></td>
-                <td><strong>${l.rep}</strong></td>
-                <td><small>${l.role}</small></td>
-                <td><span class="badge-type">${l.type}</span></td>
-                <td>${l.from}</td>
-                <td>${l.to}</td>
-                <td><strong>${l.days} أيام</strong></td>
-                <td>${l.reason}</td>
-                <td><span class="status-pill ${l.status==='معتمدة'?'status-confirmed':'status-pending'}">${l.status}</span></td>
-                ${currentUser.canApprove ? `
+                <td><strong>\${l.id}</strong></td>
+                <td><strong>\${l.rep}</strong></td>
+                <td><small>\${l.role}</small></td>
+                <td><span class="badge-type">\${l.type}</span></td>
+                <td>\${l.from}</td>
+                <td>\${l.to}</td>
+                <td><strong>\${l.days} أيام</strong></td>
+                <td>\${l.reason}</td>
+                <td><span class="status-pill \${l.status==='معتمدة'?'status-confirmed':'status-pending'}">\${l.status}</span></td>
+                \${currentUser.canApprove ? \`
                   <td>
-                    ${l.status === 'قيد الانتظار' ? `
-                      <button class="btn-sm primary" onclick="approveLeave('${l.id}')">✓ اعتماد</button>
-                      <button class="btn-sm" style="color:red;" onclick="rejectLeave('${l.id}')">✗ رفض</button>
-                    ` : '<small style="color:green;">تمت المعالجة</small>'}
+                    \${l.status === 'قيد الانتظار' ? \`
+                      <button class="btn-sm primary" onclick="approveLeave('\${l.id}')">✓ اعتماد</button>
+                      <button class="btn-sm" style="color:red;" onclick="rejectLeave('\${l.id}')">✗ رفض</button>
+                    \` : '<small style="color:green;">تمت المعالجة</small>'}
                   </td>
-                ` : ''}
+                \` : ''}
               </tr>
-            `).join('')}
+            \`).join('')}
           </tbody>
         </table>
       </div>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
@@ -1241,7 +1252,7 @@
       distance: calcDistance(myLat, myLng, c.lat || 30.5877, c.lng || 31.5020)
     })).sort((a, b) => a.distance - b.distance);
 
-    let html = `
+    let html = \`
       <div class="section-header">
         <div>
           <h3>رادار الـ GPS والعملاء القريبين لموقعك الحالي 🧭</h3>
@@ -1250,37 +1261,37 @@
       </div>
 
       <div class="card-grid">
-        ${withDist.map(c => `
+        \${withDist.map(c => \`
           <div class="client-card" style="border-right:4px solid var(--brand);">
             <div class="client-card-top">
               <div>
-                <h4>${c.name}</h4>
-                <p>📍 ${c.gov} - ${c.city}</p>
+                <h4>\${c.name}</h4>
+                <p>📍 \${c.gov} - \${c.city}</p>
               </div>
-              <span class="badge-type" style="background:#dbeafe;color:#1e40af;">تبعد ${c.distance} كم</span>
+              <span class="badge-type" style="background:#dbeafe;color:#1e40af;">تبعد \${c.distance} كم</span>
             </div>
             <div class="client-meta">
-              <span>👤 المسؤول: ${c.contact}</span>
-              <span>📞 ${c.phone}</span>
-              <span class="badge-type">${c.type}</span>
+              <span>👤 المسؤول: \${c.contact}</span>
+              <span>📞 \${c.phone}</span>
+              <span class="badge-type">\${c.type}</span>
             </div>
             <div class="client-actions">
-              <a href="https://maps.google.com/?q=${c.gps}" target="_blank" class="btn-sm primary">
+              <a href="https://maps.google.com/?q=\${c.gps}" target="_blank" class="btn-sm primary">
                 🗺️ بدء الملاحة بالـ GPS
               </a>
-              <button class="btn-sm" onclick="openAddVisitForCustomer('${c.name}', '${c.gov}')">
+              <button class="btn-sm" onclick="openAddVisitForCustomer('\${c.name}', '\${c.gov}')">
                 تسجيل زيارة فورية
               </button>
             </div>
           </div>
-        `).join('')}
+        \`).join('')}
       </div>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
   function renderTeam() {
-    let html = `
+    let html = \`
       <div class="section-header">
         <div>
           <h3>فريق العمل وأطباء شركة KENAVET الميدانيين</h3>
@@ -1345,12 +1356,12 @@
           </div>
         </div>
       </div>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
   function renderPresentation() {
-    let html = `
+    let html = \`
       <div style="background:white;border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
           <div>
@@ -1376,7 +1387,7 @@
         <span style="font-size:12px;color:var(--muted);">استخدم الأسهم أو الماوس للتنقل</span>
       </div>
       <iframe src="./FieldForce_Pro_Interactive_Presentation.html" class="deck-frame"></iframe>
-    `;
+    \`;
     document.getElementById('mainContent').innerHTML = html;
   }
 
@@ -1386,9 +1397,9 @@
   }
 
   function openAddCustomerModal() {
-    const govOpts = governorates.map(g => `<option value="${g.name}">${g.name}</option>`).join('');
+    const govOpts = governorates.map(g => \`<option value="\${g.name}">\${g.name}</option>\`).join('');
     const box = document.getElementById('modalBox');
-    box.innerHTML = `
+    box.innerHTML = \`
       <div class="modal-header">
         <h3>➕ تكويد عميل / مزرعة / عيادة بيطرية جديدة</h3>
         <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1402,7 +1413,7 @@
           <div class="form-group">
             <label>المحافظة *</label>
             <select id="mCustGov" onchange="updateCities(this.value)">
-              ${govOpts}
+              \${govOpts}
             </select>
           </div>
           <div class="form-group">
@@ -1452,7 +1463,7 @@
         <button class="btn-outline" onclick="closeModal()">إلغاء</button>
         <button class="btn-primary" onclick="saveCustomer()">حفظ وتكويد العميل</button>
       </div>
-    `;
+    \`;
     updateCities(governorates[0].name);
     document.getElementById('modalBackdrop').style.display = 'flex';
   }
@@ -1461,7 +1472,7 @@
     const gov = governorates.find(g => g.name === govName);
     const citySelect = document.getElementById('mCustCity');
     if (!citySelect || !gov) return;
-    citySelect.innerHTML = gov.areas.map(a => `<option value="${a}">${a}</option>`).join('');
+    citySelect.innerHTML = gov.areas.map(a => \`<option value="\${a}">\${a}</option>\`).join('');
   }
 
   function saveCustomer() {
@@ -1499,10 +1510,10 @@
 
   function openAddVisitModal() {
     const custs = getStore('kenavet_customers');
-    const custOpts = custs.map(c => `<option value="${c.name}" data-gov="${c.gov}">${c.name} (${c.gov} - ${c.city})</option>`).join('');
+    const custOpts = custs.map(c => \`<option value="\${c.name}" data-gov="\${c.gov}">\${c.name} (\${c.gov} - \${c.city})</option>\`).join('');
 
     const box = document.getElementById('modalBox');
-    box.innerHTML = `
+    box.innerHTML = \`
       <div class="modal-header">
         <h3>⚡ إرسال تقرير زيارة ميدانية جديدة</h3>
         <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1511,7 +1522,7 @@
         <div class="form-group">
           <label>اختيار العميل أو المزرعة من القائمة *</label>
           <select id="mVisitCust">
-            ${custOpts}
+            \${custOpts}
           </select>
         </div>
         <div class="form-row-2">
@@ -1543,7 +1554,7 @@
         <button class="btn-outline" onclick="closeModal()">إلغاء</button>
         <button class="btn-primary" onclick="saveVisit()">إرسال التقرير اللحظي</button>
       </div>
-    `;
+    \`;
     document.getElementById('modalBackdrop').style.display = 'flex';
   }
 
@@ -1585,10 +1596,10 @@
 
   function openAddCollectionModal() {
     const custs = getStore('kenavet_customers');
-    const custOpts = custs.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    const custOpts = custs.map(c => \`<option value="\${c.name}">\${c.name}</option>\`).join('');
 
     const box = document.getElementById('modalBox');
-    box.innerHTML = `
+    box.innerHTML = \`
       <div class="modal-header">
         <h3>💰 تسجيل سند تحصيل مالي / شيك بنكي</h3>
         <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1597,7 +1608,7 @@
         <div class="form-group">
           <label>اسم العميل المسدد *</label>
           <select id="mColCust">
-            ${custOpts}
+            \${custOpts}
           </select>
         </div>
         <div class="form-row-2">
@@ -1618,7 +1629,7 @@
         <div class="form-row-2">
           <div class="form-group">
             <label>رقم الشيك أو المعاملة</label>
-            <input type="text" id="mColRef" placeholder="CHQ-..." value="CHQ-${Math.floor(100000 + Math.random()*900000)}">
+            <input type="text" id="mColRef" placeholder="CHQ-..." value="CHQ-\${Math.floor(100000 + Math.random()*900000)}">
           </div>
           <div class="form-group">
             <label>اسم البنك المسحوب عليه</label>
@@ -1634,7 +1645,7 @@
         <button class="btn-outline" onclick="closeModal()">إلغاء</button>
         <button class="btn-primary" onclick="saveCollection()">حفظ وتأكيد السند</button>
       </div>
-    `;
+    \`;
     document.getElementById('modalBackdrop').style.display = 'flex';
   }
 
@@ -1668,7 +1679,7 @@
 
   function openLeaveModal() {
     const box = document.getElementById('modalBox');
-    box.innerHTML = `
+    box.innerHTML = \`
       <div class="modal-header">
         <h3>🌴 تقديم طلب إجازة رسمي</h3>
         <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1707,7 +1718,7 @@
         <button class="btn-outline" onclick="closeModal()">إلغاء</button>
         <button class="btn-primary" onclick="saveLeave()">إرسال الطلب للاعتماد</button>
       </div>
-    `;
+    \`;
     document.getElementById('modalBackdrop').style.display = 'flex';
   }
 
@@ -1769,3 +1780,16 @@
 
 </body>
 </html>
+`;
+
+// Write to docs/index.html
+const outputIndex = path.join('D:', 'CRM', 'docs', 'index.html');
+fs.writeFileSync(outputIndex, appHtml, 'utf8');
+console.log('✅ Generated complete live KENAVET CRM web application at:', outputIndex);
+
+// Copy to brain artifact directory as well
+const brainDir = 'C:\\Users\\M\\.gemini\\antigravity\\brain\\d197869b-798f-48f9-98d4-df4d053d7792';
+if (fs.existsSync(brainDir)) {
+  fs.copyFileSync(outputIndex, path.join(brainDir, 'index.html'));
+  console.log('✅ Copied to brain directory');
+}
